@@ -9,7 +9,10 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      friends: []
+      friends: [],
+      name: '',
+      email: '',
+      age: ''
     }
   }
 
@@ -23,9 +26,21 @@ class App extends Component {
 
   }
 
-  addFriend(){
+  changeHandler = (event) => {
+    console.log('hi')
+    this.setState({[event.target.name]: event.target.value})
+  }
+
+
+  addFriend = (event) =>{
+    event.preventDefault();
+
     axios
-      .post("http://localhost:5000/friends")
+      .post("http://localhost:5000/friends", {
+        name: this.state.name,
+        age: this.state.age,
+        email: this.state.email,
+      })
       .then(response => { 
         this.setState({ friends: response.data});
       })
@@ -36,7 +51,7 @@ class App extends Component {
     return (
       <div className="App">
           <FriendsList friendsList={this.state.friends} />
-          <AddFriend function={this.addFriend}/>
+          <AddFriend submitfunction={this.addFriend} changeFunction={this.changeHandler} values={this.state}/>
       </div>
     );
   }
